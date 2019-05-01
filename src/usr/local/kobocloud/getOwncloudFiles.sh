@@ -11,6 +11,7 @@ outDir="$2"
 
 shareID=`echo $baseURL | sed -e 's@.*s/\([^/ ]*\)$@\1@'`
 davServer=`echo $baseURL | sed -e 's@.*\(http.*\)/s/[^/ ]*$@\1@' -e 's@/index\.php@@'`
+urlbase=`echo $baseURL | awk -F\/ '{print $1"//"$3}'`
 
 echo $shareID
 echo $davServer
@@ -21,7 +22,7 @@ while read relativeLink
 do
   # process line 
   outFileName=`basename $relativeLink`
-  linkLine=$davServer/$relativeLink
+  linkLine=$urlbase/$relativeLink
   localFile="$outDir/$outFileName"
   # get remote file
   `dirname $0`/getRemoteFile.sh "$linkLine" "$localFile" $shareID
