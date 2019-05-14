@@ -1,7 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 baseURL="$1"
 outDir="$2"
+
+urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
 
 #load config
 . `dirname $0`/config.sh
@@ -24,6 +26,11 @@ do
   outFileName=`basename $relativeLink`
   linkLine=$urlbase/$relativeLink
   localFile="$outDir/$outFileName"
+  llocalFile=$(urldecode "$localFile")
   # get remote file
   `dirname $0`/getRemoteFile.sh "$linkLine" "$localFile" $shareID
+
+  if [ "$localFile" != "llocalFile" ]; then
+	mv $localFile $llocalFile
+  fi
 done
